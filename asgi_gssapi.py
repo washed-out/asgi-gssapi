@@ -1,11 +1,11 @@
+import base64
 import logging
-import os
 import socket
 from typing import Optional, Callable, Union, List
 
 import gssapi
-import enum
-import base64
+
+__version__ = '0.1.0'
 
 logger = logging.getLogger(__name__)
 
@@ -49,8 +49,7 @@ class SPNEGOAuthMiddleware:
         self._service_name = gssapi.Name(self.service_principal, gssapi.NameType.hostbased_service)
         self._service_cname = self._service_name.canonicalize(gssapi_mech)
         self._service_creds = gssapi.Credentials(name=self._service_cname, usage="accept")
-        
-        
+
     def _error_response(self, status_code: int, headers: dict = None, message: Union[str, bytes] = ""):
         if not headers:
             headers = {}
@@ -137,11 +136,11 @@ class SPNEGOAuthMiddleware:
         header = headers.get(b"authorization", b"").decode("utf-8")
         if header:
             if header.lower().startswith("negotiate "):
-                token = header[len("negotiate ") :]
+                token = header[len("negotiate "):]
                 auth_attempted = True
                 try:
                     auth_complete = self._gssapi_authenticate(ctx, token)
-                except Exception as e:
+                except Exception:
                     logger.exception("GSSAPI Auth failure.")
 
         async def wrapped_send(event):

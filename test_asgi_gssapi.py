@@ -1,9 +1,10 @@
+import base64
+
+import pytest
+import mock
+
 from asgi_gssapi import SPNEGOAuthMiddleware
 from async_asgi_testclient import TestClient
-import mock
-import pytest
-import unittest
-import base64
 
 
 async def index(scope, receive, send):
@@ -42,6 +43,7 @@ def quick_error(code: int, content: bytes, content_type: bytes, www_auth_header:
     )
 
 
+@mock.patch("gssapi.Credentials", lambda name, usage: None)
 @mock.patch("asgi_gssapi.SPNEGOAuthMiddleware._gssapi_authenticate")
 @pytest.mark.asyncio
 async def test_authentication_missing_but_not_required(do_auth):
@@ -60,6 +62,7 @@ async def test_authentication_missing_but_not_required(do_auth):
         assert do_auth.mock_calls == []
 
 
+@mock.patch("gssapi.Credentials", lambda name, usage: None)
 @mock.patch("gssapi.SecurityContext.initiator_name", "user@EXAMPLE.ORG")
 @mock.patch("gssapi.SecurityContext.complete", False)
 @mock.patch("gssapi.SecurityContext.step")
@@ -90,6 +93,7 @@ async def test_authentication_invalid_but_not_required(decode, step):
         assert step.mock_calls != []  # We tried
 
 
+@mock.patch("gssapi.Credentials", lambda name, usage: None)
 @mock.patch("gssapi.SecurityContext.initiator_name", "user@EXAMPLE.ORG")
 @mock.patch("gssapi.SecurityContext.complete", True)
 @mock.patch("gssapi.SecurityContext.step")
@@ -120,6 +124,7 @@ async def test_authentication_valid_but_not_required(decode, step):
         assert step.mock_calls != []  # We tried
 
 
+@mock.patch("gssapi.Credentials", lambda name, usage: None)
 @pytest.mark.asyncio
 async def test_unauthorized():
     """
@@ -138,6 +143,7 @@ async def test_unauthorized():
         assert r.headers["content-length"] == str(len(r.content))
 
 
+@mock.patch("gssapi.Credentials", lambda name, usage: None)
 @pytest.mark.asyncio
 async def test_unauthorized_when_missing_negotiate():
     """
@@ -156,6 +162,7 @@ async def test_unauthorized_when_missing_negotiate():
         assert r.headers["content-length"] == str(len(r.content))
 
 
+@mock.patch("gssapi.Credentials", lambda name, usage: None)
 @pytest.mark.asyncio
 async def test_unauthorized_custom():
     """
@@ -175,6 +182,7 @@ async def test_unauthorized_custom():
         assert r.headers["content-length"] == str(len(r.content))
 
 
+@mock.patch("gssapi.Credentials", lambda name, usage: None)
 @pytest.mark.asyncio
 async def test_unauthorized_custom_content_type():
     """
@@ -196,6 +204,7 @@ async def test_unauthorized_custom_content_type():
         assert r.headers["content-length"] == str(len(r.content))
 
 
+@mock.patch("gssapi.Credentials", lambda name, usage: None)
 @mock.patch("gssapi.SecurityContext.initiator_name", "user@EXAMPLE.ORG")
 @mock.patch("gssapi.SecurityContext.complete", True)
 @mock.patch("gssapi.SecurityContext.step")
@@ -219,8 +228,9 @@ async def test_authorized(decode, step):  # self):#, clean, name, response, step
         assert r.headers["WWW-Authenticate"] == "Negotiate {}".format(base64.b64encode(b"STOKEN").decode())
 
         assert step.mock_calls != []
-        
-        
+
+
+@mock.patch("gssapi.Credentials", lambda name, usage: None)
 @mock.patch("gssapi.SecurityContext.initiator_name", "user@EXAMPLE.ORG")
 @mock.patch("gssapi.SecurityContext.complete", True)
 @mock.patch("gssapi.SecurityContext.step")
@@ -245,7 +255,7 @@ async def test_authorized_any_hostname(decode, step):  # self):#, clean, name, r
         assert step.mock_calls != []
 
 
-
+@mock.patch("gssapi.Credentials", lambda name, usage: None)
 @pytest.mark.asyncio
 async def test_forbidden():
     """
@@ -261,6 +271,7 @@ async def test_forbidden():
         assert r.headers["content-length"] == str(len(r.content))
 
 
+@mock.patch("gssapi.Credentials", lambda name, usage: None)
 @pytest.mark.asyncio
 async def test_forbidden_custom():
     """
@@ -277,6 +288,7 @@ async def test_forbidden_custom():
         assert r.headers["content-length"] == str(len(r.content))
 
 
+@mock.patch("gssapi.Credentials", lambda name, usage: None)
 @pytest.mark.asyncio
 async def test_forbidden_custom_content_type():
     """

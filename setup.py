@@ -7,9 +7,9 @@ Provides Kerberos authentication support for ASGI applications
 Links
 `````
 
-* `documentation <https://asgi-kerberos.readthedocs.org/en/latest/>`_
+* `documentation <https://asgi-gssapi.readthedocs.org/en/latest/>`_
 * `development version
-  <http://github.com/washed-out/asgi-kerberos/zipball/master#egg=asgi-kerberos-dev>`_
+  <http://github.com/washed-out/asgi-gssapi/zipball/master#egg=asgi-gssapi-dev>`_
 
 """
 
@@ -41,11 +41,8 @@ setup(name='ASGI-GSSAPI',
                    'License :: OSI Approved :: BSD License',
                    'Operating System :: OS Independent',
                    'Programming Language :: Python',
-                   'Programming Language :: Python :: 2.7',
                    'Programming Language :: Python :: 3',
                    'Topic :: Internet :: WWW/HTTP',
-                   'Topic :: Internet :: WWW/HTTP :: ASGI',
-                   'Topic :: Internet :: WWW/HTTP :: ASGI :: Middleware',
                    'Topic :: Software Development :: Libraries :: Python Modules'],
       test_suite='test_asgi_gssapi',
-      tests_require=['pytest-asyncio', 'async-asgi-testclient'])
+      tests_require=['pytest-asyncio', 'async-asgi-testclient', 'mock'])

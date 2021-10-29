@@ -5,7 +5,7 @@ from typing import Optional, Callable, Union, List
 
 import gssapi
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 logger = logging.getLogger(__name__)
 

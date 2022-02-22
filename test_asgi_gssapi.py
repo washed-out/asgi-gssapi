@@ -107,7 +107,8 @@ async def test_authentication_valid_but_not_required(decode, step):
     """
     decode.return_value = "CTOKEN"
     step.return_value = b"STOKEN"
-    false = lambda x: False
+    async def false(scope):
+        return False
     async with TestClient(
         SPNEGOAuthMiddleware(
             index,

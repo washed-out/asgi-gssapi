@@ -1,6 +1,7 @@
 import base64
 import logging
 import socket
+import inspect
 from typing import Optional, Callable, Union, List
 
 import gssapi
@@ -127,7 +128,10 @@ class SPNEGOAuthMiddleware:
         if scope["type"] != "http":
             return await self._app(scope, receive, send)
 
-        auth_required = self._auth_required_callback(scope)
+        if inspect.iscoroutinefunction(self._auth_required_callback):
+            auth_required = await self._auth_required_callback(scope)
+        else:
+            auth_required = self._auth_required_callback(scope)
         auth_attempted = False
         auth_complete = False
         www_auth_header = []
